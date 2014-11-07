@@ -1,4 +1,4 @@
-"""A bspline drawer."""
+"""Components of a puzzle."""
 
 import random
 
