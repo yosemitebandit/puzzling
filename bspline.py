@@ -27,9 +27,12 @@ class BSpline(object):
     self.y = interpolate.splev(ipl_t, y_tup)
 
 
-def perturb_values_in_list(array, jitter_value):
+def perturb_values_in_list(array, scaling):
   """Adjust each element in an array in-place by some value."""
   for i in range(len(array)):
+    # start and endpoints are left untouched
+    if i == 0 or i == len(array)-1:
+      continue
+    # other points get perturbed by some amount
     sign = random.choice((-1, 1))
-    perturbation = sign * random.random() * jitter_value
-    array[i] += perturbation
+    array[i] += sign * random.random() * scaling

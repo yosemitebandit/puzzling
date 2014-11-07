@@ -17,7 +17,7 @@ if __name__ == '__main__':
                       [8, -2], [10, -3], [12, -2],
                       [11, 0],
                       [13, 1], [20, 0]]
-    spline = bspline.BSpline(control_points, jitter=1)
+    spline = bspline.BSpline(control_points, jitter=0.75)
     # plot
     axes.plot(spline.x, spline.y)
 
