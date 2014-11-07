@@ -7,3 +7,7 @@ a puzzle-piece generator
 * for each segment, pick a random staring vertex
 * run spline = generate_peninsula(start, end)
 * handle board edges as ..edge cases
+
+
+### thus far
+![board](https://raw.github.com/yosemitebandit/puzzling/branch/master/board.png)
