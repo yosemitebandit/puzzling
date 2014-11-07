@@ -10,4 +10,4 @@ a puzzle-piece generator
 
 
 ### thus far
-![board](https://raw.github.com/yosemitebandit/puzzling/branch/master/board.png)
+![board](https://raw.github.com/yosemitebandit/puzzling/master/board.png)
