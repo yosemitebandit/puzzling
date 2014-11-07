@@ -141,7 +141,7 @@ class Grid(object):
             # such that the spline's endpoints match 'start' and 'right'
             spline.scale(calculate_distance(start, right))
             spline.rotate(calculate_angle(start, right))
-            spline.translate(start)
+            spline.translate(right)
             segments.append((spline.x, spline.y))
 
     return segments
