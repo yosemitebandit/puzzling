@@ -11,7 +11,9 @@ if __name__ == '__main__':
   axes = figure.add_subplot(111)
 
   # setup a grid
-  grid = puzzle.Grid(5, 7)
+  grid = puzzle.Grid(4, 5)
+  segments = grid.get_segments()
+  print 'number of segments:', len(segments)
 
   # plot
   axes.plot([p.x for p in grid.points], [p.y for p in grid.points], 'b.')

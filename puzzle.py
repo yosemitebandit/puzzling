@@ -46,16 +46,16 @@ class Point(object):
 class Grid(object):
   """Manages an M row x N column grid."""
   def __init__(self, M, N):
-    self.mesh = []
-    self.points = []
+    self.M, self.N = (M, N)
+    self.mesh, self.points = [], []
     # init with empty rows
-    for m in range(M):
+    for m in range(self.M):
       self.mesh.append([])
 
     # populate with points
-    for m in range(M):
-      for n in range(N):
-        if m == 0 or n == 0 or m == M-1 or n == N-1:
+    for m in range(self.M):
+      for n in range(self.N):
+        if m == 0 or n == 0 or m == self.M-1 or n == self.N-1:
           jitter_factor = 0
         else:
           jitter_factor = 0.1
@@ -68,6 +68,22 @@ class Grid(object):
     self.max_x = max([p.x for p in self.points])
     self.min_y = min([p.y for p in self.points])
     self.max_y = max([p.y for p in self.points])
+
+  def get_segments(self):
+    """Returns unique edges between points."""
+    segments = []
+    for m in range(self.M):
+      for n in range(self.N):
+        start = self.mesh[m][n]
+        # check point below
+        if m < self.M-1:
+          below = self.mesh[m+1][n]
+          segments.append((start, below))
+        # check point to the right
+        if n < self.N-1:
+          right = self.mesh[m][n+1]
+          segments.append((start, right))
+    return segments
 
 
 def perturb_values_in_list(array, scaling):
