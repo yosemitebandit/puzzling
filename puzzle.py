@@ -27,6 +27,49 @@ class BSpline(object):
     self.y = interpolate.splev(ipl_t, y_tup)
 
 
+class Point(object):
+  """2D point approximately on a unit grid."""
+  def __init__(self, x, y, jitter=None):
+    if jitter:
+      sign = random.choice((-1, 1))
+      self.x = x + sign * random.random() * jitter
+      sign = random.choice((-1, 1))
+      self.y = y + sign * random.random() * jitter
+    else:
+      self.x = x
+      self.y = y
+
+  def __repr__(self):
+    return '%s,%s' % (self.x, self.y)
+
+
+class Grid(object):
+  """Manages an M row x N column grid."""
+  def __init__(self, M, N):
+    self.mesh = []
+    self.points = []
+    # init with empty rows
+    for m in range(M):
+      self.mesh.append([])
+
+    # populate with points
+    for m in range(M):
+      for n in range(N):
+        if m == 0 or n == 0 or m == M-1 or n == N-1:
+          jitter_factor = 0
+        else:
+          jitter_factor = 0.1
+        p = Point(m, n, jitter=jitter_factor)
+        self.mesh[m].append(p)
+        self.points.append(p)
+
+    # setup convenience values
+    self.min_x = min([p.x for p in self.points])
+    self.max_x = max([p.x for p in self.points])
+    self.min_y = min([p.y for p in self.points])
+    self.max_y = max([p.y for p in self.points])
+
+
 def perturb_values_in_list(array, scaling):
   """Adjust each element in an array in-place by some value."""
   for i in range(len(array)):
