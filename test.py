@@ -6,11 +6,11 @@ import numpy
 import matplotlib.pyplot as pyplot
 from scipy import interpolate
 
-#points = numpy.array([[0, 0], [0, 2], [2, 3], [4, 0], [6, 3], [8, 2], [8, 0]])
-# innie
-points = numpy.array([[0, 4], [3, 6],
-                      [3, 2], [4, 1], [5, 2],
-                      [7, 6], [10, 4]])
+points = numpy.array([[-4, 4.5], [3, 5],
+                      [5, 4],
+                      [4, 2], [6, 1], [8, 2],
+                      [7, 4],
+                      [9, 5], [16, 4.5]])
 x = points[:, 0]
 y = points[:, 1]
 
@@ -31,6 +31,8 @@ axes.plot(x, y, label='original')
 axes.plot(x_i, y_i, label='spline')
 axes.set_xlim([min(x) - 1.0, max(x) + 1.0])
 axes.set_ylim([min(y) - 1.0, max(y) + 1.0])
-axes.legend()
+#axes.legend()
+
+axes.set_aspect('equal')
 
 figure.savefig('/tmp/test.png')
