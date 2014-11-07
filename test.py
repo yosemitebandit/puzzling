@@ -6,7 +6,11 @@ import numpy
 import matplotlib.pyplot as pyplot
 from scipy import interpolate
 
-points = numpy.array([[0, 0], [0, 2], [2, 3], [4, 0], [6, 3], [8, 2], [8, 0]])
+#points = numpy.array([[0, 0], [0, 2], [2, 3], [4, 0], [6, 3], [8, 2], [8, 0]])
+# innie
+points = numpy.array([[0, 4], [3, 6],
+                      [3, 2], [4, 1], [5, 2],
+                      [7, 6], [10, 4]])
 x = points[:, 0]
 y = points[:, 1]
 
