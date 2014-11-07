@@ -26,6 +26,8 @@ class BSpline(object):
     y_tup = interpolate.splrep(control_range, self.control_y, k=3, t=knots)
     self.x = interpolate.splev(ipl_t, x_tup)
     self.y = interpolate.splev(ipl_t, y_tup)
+    if random.random() > 0.5:
+      self.y = [-1 * y for y in self.y]
 
   def scale(self, distance):
     """Scale x and y by some factor."""
