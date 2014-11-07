@@ -1,5 +1,6 @@
 """Components of a puzzle."""
 
+import math
 import random
 
 import numpy
@@ -26,6 +27,35 @@ class BSpline(object):
     self.x = interpolate.splev(ipl_t, x_tup)
     self.y = interpolate.splev(ipl_t, y_tup)
 
+  def scale(self, distance):
+    """Scale x and y by some factor."""
+    start = Point(self.x[0], self.y[0])
+    end = Point(self.x[-1], self.y[-1])
+    original_distance = calculate_distance(start, end)
+    scale_factor = original_distance / distance
+    self.x = [x / scale_factor for x in self.x]
+    self.y = [y / scale_factor for y in self.y]
+
+  def rotate(self, angle):
+    """Rotate x and y by some angle."""
+    rotation_matrix = numpy.matrix([[math.cos(angle), math.sin(angle)],
+                                    [-1 * math.sin(angle), math.cos(angle)]])
+    rotated_x, rotated_y = [], []
+    for i in range(len(self.x)):
+      vector = numpy.matrix(numpy.array([self.x[i], self.y[i]]))
+      rotated_vector = rotation_matrix * vector.T
+      # :|
+      rotated_vector = rotated_vector.ravel().tolist()[0]
+      rotated_x.append(rotated_vector[0])
+      rotated_y.append(rotated_vector[1])
+    self.x = rotated_x
+    self.y = rotated_y
+
+  def translate(self, anchor_point):
+    """Translate all points such that the spline starts at some anchor."""
+    self.x = [x + anchor_point.x for x in self.x]
+    self.y = [y + anchor_point.y for y in self.y]
+
 
 class Point(object):
   """2D point approximately on a unit grid."""
@@ -45,8 +75,9 @@ class Point(object):
 
 class Grid(object):
   """Manages an M row x N column grid."""
-  def __init__(self, M, N):
+  def __init__(self, (M, N), golden_control_points):
     self.M, self.N = (M, N)
+    self.golden_control_points = golden_control_points
     self.mesh, self.points = [], []
     # init with empty rows
     for m in range(self.M):
@@ -74,16 +105,62 @@ class Grid(object):
     segments = []
     for m in range(self.M):
       for n in range(self.N):
+        # setup the start point for comparison
         start = self.mesh[m][n]
-        # check point below
+
+        # check the point below the start
         if m < self.M-1:
           below = self.mesh[m+1][n]
-          segments.append((start, below))
-        # check point to the right
+
+          # if it's directly below, this is an edge, so just create a line
+          if abs(start.x - below.x) == 1:
+            segments.append(([start.x, below.x], [start.y, below.y]))
+
+          # if there's an offset, this is an interior segment: draw a bspline
+          else:
+            spline = BSpline(self.golden_control_points, jitter=0.75)
+            # transform it via scaling, rotation and translation
+            # such that the spline's endpoints match 'start' and 'below'
+            spline.scale(calculate_distance(start, below))
+            spline.rotate(calculate_angle(start, below))
+            spline.translate(start)
+            segments.append((spline.x, spline.y))
+
+        # now check the point to the right of the start
         if n < self.N-1:
           right = self.mesh[m][n+1]
-          segments.append((start, right))
+
+          # if it's directly right, this is an edge, so just create a line
+          if abs(start.y - right.y) == 1:
+            segments.append(([start.x, right.x], [start.y, right.y]))
+
+          # if there's an offset, this is an interior segment: draw a bspline
+          else:
+            spline = BSpline(self.golden_control_points, jitter=0.75)
+            # transform it via scaling, rotation and translation
+            # such that the spline's endpoints match 'start' and 'right'
+            spline.scale(calculate_distance(start, right))
+            spline.rotate(calculate_angle(start, right))
+            spline.translate(start)
+            segments.append((spline.x, spline.y))
+
     return segments
+
+
+def calculate_angle(p1, p2):
+  """Returns angle between two points in radians."""
+  '''
+  x_dist = p2.x - p1.x
+  hypotenuse = calculate_distance(p1, p2)
+  return math.acos(x_dist / hypotenuse)
+  '''
+  x_dist = p2.x - p1.x
+  y_dist = p2.y - p1.y
+  return math.atan2(y_dist, x_dist)
+
+
+def calculate_distance(p1, p2):
+  return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
 
 
 def perturb_values_in_list(array, scaling):
