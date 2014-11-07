@@ -6,11 +6,11 @@ import numpy
 import matplotlib.pyplot as pyplot
 from scipy import interpolate
 
-points = numpy.array([[-4, 4.5], [3, 5],
-                      [5, 4],
-                      [4, 2], [6, 1], [8, 2],
-                      [7, 4],
-                      [9, 5], [16, 4.5]])
+points = numpy.array([[0, 0], [7, 1],
+                      [9, 0],
+                      [8, -2], [10, -3], [12, -2],
+                      [11, 0],
+                      [13, 1], [20, 0]])
 x = points[:, 0]
 y = points[:, 1]
 
@@ -22,8 +22,6 @@ x_tup = interpolate.splrep(t, x, k=3, t=knots)
 y_tup = interpolate.splrep(t, y, k=3, t=knots)
 x_i = interpolate.splev(ipl_t, x_tup)
 y_i = interpolate.splev(ipl_t, y_tup)
-
-print 'knots:', x_tup
 
 figure = pyplot.figure()
 axes = figure.add_subplot(111)
