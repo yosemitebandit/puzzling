@@ -162,6 +162,7 @@ def calculate_angle(p1, p2):
 
 
 def calculate_distance(p1, p2):
+  """Distance between two Point instances."""
   return math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
 
 

@@ -1,10 +1,10 @@
-"""Plotting a single spline."""
+"""Plotting a puzzle grid."""
 
 import matplotlib.pyplot as pyplot
 
 import puzzle
 
-# good starting point for a puzzle piece edge
+# empirically-determined spline control points for a puzzle piece edge
 control_points = [[0, 0], [7, 1],
                   [9, 0],
                   [8, -2], [10, -3], [12, -2],
@@ -19,7 +19,6 @@ if __name__ == '__main__':
   # setup a grid
   grid = puzzle.Grid((7, 9), control_points)
   segments = grid.get_segments()
-  print 'number of segments:', len(segments)
 
   # plot
   axes.plot([p.x for p in grid.points], [p.y for p in grid.points], 'b.')
