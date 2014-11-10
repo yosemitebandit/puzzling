@@ -17,7 +17,7 @@ if __name__ == '__main__':
   axes = figure.add_subplot(111)
 
   # setup a grid
-  grid = puzzle.Grid((7, 9), control_points)
+  grid = puzzle.Grid((17, 19), control_points)
   segments = grid.get_segments()
 
   # plot
