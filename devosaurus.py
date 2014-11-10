@@ -15,7 +15,7 @@ def memoize(f):
       return self[args]
     def __missing__(self, key):
       ret = self[key] = self.f(*key)
-      return ret        
+      return ret
   return memodict(f)
 
 def C_factory(P, n=2, V_type="clamped"):
@@ -34,7 +34,7 @@ def C_factory(P, n=2, V_type="clamped"):
   """
 
   # TODO: check that p_len is ok with the degree and > 0
-  m = len(P)    # the number of points in P    
+  m = len(P)    # the number of points in P
   D = len(P[0]) # the dimension of a point (2D, 3D)
 
   # Create the knot vector
@@ -105,12 +105,12 @@ def make_knot_vector(n, m, style="clamped"):
 def basis_factory(degree):
   """ Returns a basis_function for the given degree """
   if degree == 0:
-    @memoize        
+    @memoize
     def basis_function(t, i, knots):
       """The basis function for degree = 0 as per eq. 7"""
       t_this = knots[i]
       t_next = knots[i+1]
-      out = 1. if (t>=t_this and t<t_next) else 0.         
+      out = 1. if (t>=t_this and t<t_next) else 0.
       return out
 
   else:
@@ -121,7 +121,7 @@ def basis_factory(degree):
       t_this = knots[i]
       t_next = knots[i+1]
       t_precog  = knots[i+degree]
-      t_horizon = knots[i+degree+1]            
+      t_horizon = knots[i+degree+1]
 
       top = (t-t_this)
       bottom = (t_precog-t_this)
