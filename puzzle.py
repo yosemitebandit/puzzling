@@ -6,6 +6,8 @@ import random
 import numpy
 from scipy import interpolate
 
+from devosaurus import C_factory
+
 
 class Shape(object):
   """Generic shape"""
@@ -63,6 +65,20 @@ class BSpline(Shape):
       self.y = [-1 * y for y in self.y]
 
 
+class DevosaurusBSpline(Shape):
+  """Basis spline technique via:
+  http://devosaurus.blogspot.com/2013/10/exploring-b-splines-in-python.html
+  """
+  def __init__(self, control_points, jitter=None):
+    curve = C_factory(P=control_points, n=2, V_type='clamped')
+    samples = [t for t in numpy.linspace(curve.min, curve.max, 100,
+               endpoint=curve.endpoint)]
+    samples.append(curve.max - 0.00001)
+    curve_points = [curve(s) for s in samples]
+    self.x = [point[0] for point in curve_points]
+    self.y = [point[1] for point in curve_points]
+
+
 class Point(object):
   """2D point approximately on a unit grid."""
   def __init__(self, x, y, jitter=None):
@@ -95,7 +111,8 @@ class Grid(object):
         if m == 0 or n == 0 or m == self.M-1 or n == self.N-1:
           jitter_factor = 0
         else:
-          jitter_factor = 0.1
+          #jitter_factor = 0.1
+          jitter_factor = 0.000001
         p = Point(m, n, jitter=jitter_factor)
         self.mesh[m].append(p)
         self.points.append(p)
@@ -124,7 +141,8 @@ class Grid(object):
 
           # if there's an offset, this is an interior segment: draw a bspline
           else:
-            spline = BSpline(self.golden_control_points, jitter=0.75)
+            #spline = BSpline(self.golden_control_points, jitter=0.75)
+            spline = DevosaurusBSpline(self.golden_control_points, jitter=0.75)
             # transform it via scaling, rotation and translation
             # such that the spline's endpoints match 'start' and 'below'
             spline.scale(calculate_distance(start, below))
@@ -142,7 +160,8 @@ class Grid(object):
 
           # if there's an offset, this is an interior segment: draw a bspline
           else:
-            spline = BSpline(self.golden_control_points, jitter=0.75)
+            #spline = BSpline(self.golden_control_points, jitter=0.75)
+            spline = DevosaurusBSpline(self.golden_control_points, jitter=0.75)
             # transform it via scaling, rotation and translation
             # such that the spline's endpoints match 'start' and 'right'
             spline.scale(calculate_distance(start, right))
