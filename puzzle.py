@@ -70,6 +70,13 @@ class DevosaurusBSpline(Shape):
   http://devosaurus.blogspot.com/2013/10/exploring-b-splines-in-python.html
   """
   def __init__(self, control_points, jitter=None):
+    x_control_points = [p[0] for p in control_points]
+    y_control_points = [p[1] for p in control_points]
+    if jitter:
+      perturb_values_in_list(x_control_points, jitter)
+      perturb_values_in_list(y_control_points, jitter)
+    control_points = zip(x_control_points, y_control_points)
+
     curve = C_factory(P=control_points, n=2, V_type='clamped')
     samples = [t for t in numpy.linspace(curve.min, curve.max, 100,
                endpoint=curve.endpoint)]
@@ -77,6 +84,8 @@ class DevosaurusBSpline(Shape):
     curve_points = [curve(s) for s in samples]
     self.x = [point[0] for point in curve_points]
     self.y = [point[1] for point in curve_points]
+    if random.random() > 0.5:
+      self.y = [-1 * y for y in self.y]
 
 
 class Point(object):
