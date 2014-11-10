@@ -23,8 +23,8 @@ class Shape(object):
 
   def rotate(self, angle):
     """Rotate x and y by some angle."""
-    rotation_matrix = numpy.matrix([[math.cos(angle), math.sin(angle)],
-                                    [-1 * math.sin(angle), math.cos(angle)]])
+    rotation_matrix = numpy.matrix([[math.cos(angle), -1 * math.sin(angle)],
+                                    [math.sin(angle), math.cos(angle)]])
     rotated_x, rotated_y = [], []
     for i in range(len(self.x)):
       vector = numpy.matrix(numpy.array([self.x[i], self.y[i]]))
@@ -165,7 +165,7 @@ class Grid(object):
             # such that the spline's endpoints match 'start' and 'right'
             spline.scale(calculate_distance(start, right))
             spline.rotate(calculate_angle(start, right))
-            spline.translate(right)
+            spline.translate(start)
             segments.append((spline.x, spline.y))
 
     return segments
