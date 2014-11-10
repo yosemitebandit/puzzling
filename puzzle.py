@@ -111,8 +111,7 @@ class Grid(object):
         if m == 0 or n == 0 or m == self.M-1 or n == self.N-1:
           jitter_factor = 0
         else:
-          #jitter_factor = 0.1
-          jitter_factor = 0.000001
+          jitter_factor = 0.1
         p = Point(m, n, jitter=jitter_factor)
         self.mesh[m].append(p)
         self.points.append(p)
