@@ -106,9 +106,18 @@ class Point(object):
 
 class Grid(object):
   """Manages an M row x N column grid."""
-  def __init__(self, (M, N), golden_control_points):
+  def __init__(self, (M, N), golden_control_points, method, grid_jitter=0.1,
+               control_point_jitter=0.03):
     self.M, self.N = (M, N)
     self.golden_control_points = golden_control_points
+    if method == 'bspline':
+      self.spline = BSpline
+    elif method == 'devo':
+      self.spline = DevosaurusBSpline
+    else:
+      raise ValueError
+    self.grid_jitter = grid_jitter
+    self.control_point_jitter = control_point_jitter
     self.mesh, self.points = [], []
     # init with empty rows
     for m in range(self.M):
@@ -120,7 +129,7 @@ class Grid(object):
         if m == 0 or n == 0 or m == self.M-1 or n == self.N-1:
           jitter_factor = 0
         else:
-          jitter_factor = 0.1
+          jitter_factor = self.grid_jitter
         p = Point(m, n, jitter=jitter_factor)
         self.mesh[m].append(p)
         self.points.append(p)
@@ -149,8 +158,8 @@ class Grid(object):
 
           # if there's an offset, this is an interior segment: draw a bspline
           else:
-            #spline = BSpline(self.golden_control_points, jitter=0.75)
-            spline = DevosaurusBSpline(self.golden_control_points, jitter=0.75)
+            spline = self.spline(self.golden_control_points,
+                                jitter=self.control_point_jitter)
             # transform it via scaling, rotation and translation
             # such that the spline's endpoints match 'start' and 'below'
             spline.scale(calculate_distance(start, below))
@@ -168,8 +177,8 @@ class Grid(object):
 
           # if there's an offset, this is an interior segment: draw a bspline
           else:
-            #spline = BSpline(self.golden_control_points, jitter=0.75)
-            spline = DevosaurusBSpline(self.golden_control_points, jitter=0.75)
+            spline = self.spline(self.golden_control_points,
+                                jitter=self.control_point_jitter)
             # transform it via scaling, rotation and translation
             # such that the spline's endpoints match 'start' and 'right'
             spline.scale(calculate_distance(start, right))
