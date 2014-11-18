@@ -191,11 +191,6 @@ class Grid(object):
 
 def calculate_angle(p1, p2):
   """Returns angle between two points in radians."""
-  '''
-  x_dist = p2.x - p1.x
-  hypotenuse = calculate_distance(p1, p2)
-  return math.acos(x_dist / hypotenuse)
-  '''
   x_dist = p2.x - p1.x
   y_dist = p2.y - p1.y
   return math.atan2(y_dist, x_dist)
