@@ -9,5 +9,9 @@ a puzzle-piece generator
 * handle board edges as ..edge cases
 
 
+### usage
+* see `plot_puzzle.py`
+
+
 ### thus far
 ![board](https://raw.github.com/yosemitebandit/puzzling/master/board.png)
